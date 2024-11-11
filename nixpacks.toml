@@ -1,6 +1,6 @@
 [phases.setup]
 nixpkgsArchive = 'master'
-nixPkgs = "bun"
+nixPkgs = ["bun"]
 
 [phases.install]
 cmds = ["bun install"]
