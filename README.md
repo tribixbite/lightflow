@@ -40,3 +40,31 @@ Biome config file `biome.json`. In addition to default config, it has git integr
    - Change the `name` and `author` properties in `package.json`
    - Clean up the `README.md`
 4. You are good to go. Start the project with `npm run dev` and you will see an altered Vite starting screen with Vite, React, Biome and Tailwind styled using Tailwind classes.
+
+## Docker Instructions
+
+### Building the Docker Image
+
+To build the Docker image, run the following command in the root directory of the project:
+
+```sh
+docker build -t my-app .
+```
+
+### Running the Docker Container
+
+To run the Docker container, use the following command:
+
+```sh
+docker run -p 3000:3000 my-app
+```
+
+### Using Docker Compose
+
+Alternatively, you can use Docker Compose to build and run the project. Run the following command:
+
+```sh
+docker-compose up --build
+```
+
+This will start the application and map port 3000 on your host to port 3000 in the container.

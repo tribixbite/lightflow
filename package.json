@@ -10,7 +10,8 @@
     "format": "npx @biomejs/biome format --write ./",
     "lint": "npx @biomejs/biome lint --write ./",
     "preview": "vite preview",
-    "start": "bun run server.ts"
+    "start": "bun run server.ts",
+    "postinstall": "bun vite build"
   },
   "dependencies": {
     "@elysiajs/static": "^1.1.1",
