@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = ["bun"]
+
+[phases.install]
+cmds = ["bun install"]
+
+[start]
+cmd = "bun run start"
+
+[phases.cache]
+directories = ["node_modules", "bun.lockb"]
+
+providers = ["bun"]

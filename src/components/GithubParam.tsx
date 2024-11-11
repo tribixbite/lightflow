@@ -391,22 +391,22 @@ export const GithubParam = () => {
 
   useEffect(() => {
     const baseUrl = new URL(
-      "https://github.com/search?type=Repositories&utf8=%E2%9C%93&fork=true&archived=false"
+      "https://github.com/search?type=Repositories&utf8=%E2%9C%93&fork=true&archived=false&"
     );
     let queryString = "";
 
     // Add global filters
     if (globalFilters.stars) {
-      queryString += `&stars:>-${globalFilters.stars}`;
+      queryString += `stars:>=${globalFilters.stars} `;
     }
     if (globalFilters.commits) {
-      queryString += `&commits:>-${globalFilters.commits}`;
+    //   queryString += `commits:>=${globalFilters.commits} `;
     }
     if (globalFilters.updatedWithin) {
       const date = new Date();
       date.setDate(date.getDate() - parseInt(globalFilters.updatedWithin));
       const formattedDate = date.toISOString().split("T")[0];
-      queryString += `pushed:>=${formattedDate}`;
+      queryString += `pushed:>=${formattedDate} `;
     }
 
     // Add stack selections
