@@ -9,9 +9,11 @@
     "build": "vite build",
     "format": "npx @biomejs/biome format --write ./",
     "lint": "npx @biomejs/biome lint --write ./",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "bun run server.ts"
   },
   "dependencies": {
+    "@elysiajs/static": "^1.1.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -28,6 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
+    "elysia": "^1.1.24",
     "lucide-react": "^0.456.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
