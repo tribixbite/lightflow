@@ -1,26 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Search,
-  Copy,
-  ExternalLink,
-  Terminal,
-  Code,
-  Package,
-  Database,
-  Server,
-  Layout,
-  Palette,
-  Key,
-  Shield,
-  Activity,
-  TestTube,
-  Cloud,
-  Sigma,
-  Settings,
-  Star,
-  GitCommit,
-  Clock,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -28,23 +9,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Command,
-  CommandInput,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Textarea } from "./ui/textarea";
+  Activity,
+  Clock,
+  Cloud,
+  Code,
+  Copy,
+  Database,
+  ExternalLink,
+  GitCommit,
+  Key,
+  Layout,
+  Package,
+  Palette,
+  Search,
+  Server,
+  Shield,
+  Sigma,
+  Star,
+  Terminal,
+  TestTube,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Label } from "./ui/label";
 
 const categoryIcons: Record<string, JSX.Element> = {
@@ -400,7 +386,7 @@ export const GithubParam = () => {
       queryString += `stars:>=${globalFilters.stars} `;
     }
     if (globalFilters.commits) {
-    //   queryString += `commits:>=${globalFilters.commits} `;
+      //   queryString += `commits:>=${globalFilters.commits} `;
     }
     if (globalFilters.updatedWithin) {
       const date = new Date();
@@ -423,14 +409,43 @@ export const GithubParam = () => {
     setSearchUrl(baseUrl.toString());
   }, [selectedStack, globalFilters]);
 
+  useEffect(() => {
+    if (quickSearch) {
+      const normalizedSearch = quickSearch.toLowerCase().replace(/[\s.]+/g, "");
+      const results = Object.entries(stackOptions).flatMap(
+        ([category, options]) =>
+          options
+            .filter((option) =>
+              option
+                .toLowerCase()
+                .replace(/[\s.]+/g, "")
+                .includes(normalizedSearch)
+            )
+            .map((option) => ({ category, option }))
+      );
+      setQuickSearchResults(results);
+      setIsQuickSearchOpen(results.length > 0); // Only open if matches exist
+    } else {
+      setQuickSearchResults([]);
+      setIsQuickSearchOpen(false);
+    }
+  }, [quickSearch, stackOptions]);
+
   const handleQuickSearchSelect = (result: QuickSearchResult) => {
-    setSelectedStack((prev) => ({ ...prev, [result.category]: result.option }));
+    setSelectedStack((prev) => ({
+      ...prev,
+      [result.category]: result.option,
+    }));
     setQuickSearch("");
     setIsQuickSearchOpen(false);
   };
 
   const theme = getThemeClasses();
-
+  const handleQuickSearchKeyDown = (event: { key: string }) => {
+    if (event.key === "Enter" && quickSearchResults.length > 0) {
+      handleQuickSearchSelect(quickSearchResults[0]);
+    }
+  };
   return (
     <Card className={`w-full max-w-4xl ${theme.card}`}>
       <CardHeader className={`border-b ${theme.header}`}>
@@ -531,45 +546,40 @@ export const GithubParam = () => {
         </div>
 
         {/* Quick Search */}
-        <Popover open={isQuickSearchOpen} onOpenChange={setIsQuickSearchOpen}>
-          <PopoverTrigger asChild>
-            <div className="flex gap-4 items-center">
-              <Input
-                ref={quickSearchRef}
-                placeholder="Quick search stack..."
-                value={quickSearch}
-                onChange={(e) => setQuickSearch(e.target.value)}
-                className={theme.input}
-              />
-              <Search className={`w-5 h-5 ${theme.icon}`} />
+        <div className="relative flex gap-4 items-center">
+          <Input
+            ref={quickSearchRef}
+            placeholder="Quick search stack..."
+            value={quickSearch}
+            onChange={(e) => setQuickSearch(e.target.value)}
+            onKeyDown={handleQuickSearchKeyDown}
+            className={theme.input}
+          />
+          <Search className={`w-5 h-5 ${theme.icon}`} />
+
+          {/* Results Dropdown */}
+          {isQuickSearchOpen && quickSearchResults.length > 0 && (
+            <div
+              className={`absolute top-full mt-1 w-full max-h-48 overflow-y-auto bg-black rounded-md border shadow-lg ${theme.selectContent}`}
+            >
+              {quickSearchResults.map((result, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleQuickSearchSelect(result)}
+                  className={`p-2 cursor-pointer hover:bg-gray-700 ${theme.selectItem}`}
+                >
+                  <div className="flex items-center gap-2">
+                    {categoryIcons[result.category]}
+                    <span>{result.option}</span>
+                    <span className={`ml-2 text-xs ${theme.label}`}>
+                      ({result.category})
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
-          </PopoverTrigger>
-          <PopoverContent
-            className={`w-[calc(100%-3rem)] ${theme.selectContent}`}
-            align="start"
-          >
-            <Command>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup>
-                {quickSearchResults.map((result, index) => (
-                  <CommandItem
-                    key={index}
-                    onSelect={() => handleQuickSearchSelect(result)}
-                    className={theme.selectItem}
-                  >
-                    <div className="flex items-center gap-2">
-                      {categoryIcons[result.category]}
-                      <span>{result.option}</span>
-                      <span className={`ml-2 text-xs ${theme.label}`}>
-                        ({result.category})
-                      </span>
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
+          )}
+        </div>
 
         {/* Dropdowns Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
