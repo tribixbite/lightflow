@@ -4,8 +4,8 @@ COPY . /app
 
 WORKDIR /app
 
-RUN bun install
+RUN bun i
 
-RUN bun run build
+RUN bun vite build
 
-CMD ["bun", "run", "start"]
+CMD ["bun", "start"]
