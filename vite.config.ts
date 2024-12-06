@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
+import svgr from 'vite-plugin-svgr';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -33,10 +34,29 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
       },
     }),
+    svgr({
+      svgrOptions: {
+        // svgProps: { width: "", height: "" },
+        plugins: [
+          // "@svgr/plugin-svgo",  // TODO: this breaks the animated svgs
+          "@svgr/plugin-jsx"],
+        svgoConfig: {
+          floatPrecision: 2,
+        },
+      },
+      include: "**/*.svg?react",
+    })
   ],
+  publicDir: 'public',
+  build: {
+    outDir: 'dist',
+    sourcemap: true
+  },
+  assetsInclude: ['**/*.md'],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components')
+    }
+  }
 });

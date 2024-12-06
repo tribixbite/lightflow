@@ -1,17 +1,20 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
+  "extends": ["@tsconfig/vite-react/tsconfig.json"],
+  "exclude": ["dist", "node_modules", "tmp", "meta", "scripts"],
   "compilerOptions": {
+    "incremental": true,
+    "types": ["vite/client", "vite-plugin-svgr/client"],
+    "baseUrl": ".",
     "paths": {
-      "@components/*": ["./src/components/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@components": [
+        "src/components"
+      ],
     }
-  }
+  },
+  "include": ["src", "*.d.ts"],
+  // https://github.com/frzyc/genshin-optimizer/blob/master/tsconfig.base.json
+  // https://github.com/Rosalina121/krem-bun/blob/main/package.json
+  // 
+  // "references": [{ "path": "./tsconfig.node.json" }]
 }

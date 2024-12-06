@@ -1,5 +1,9 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
   "organizeImports": {
     "enabled": true
   },
@@ -7,21 +11,38 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "correctness": {
+        "noNewSymbol": "error",
+        "noUndeclaredVariables": "warn",
+        "noUnusedVariables": "warn",
+        "useHookAtTopLevel": "error"
+      },
+      "style": {
+        "noNamespace": "error"
+      },
+      "suspicious": {
+        "noEmptyBlockStatements": "error"
+      },
       "nursery": {
         "useSortedClasses": {
           "level": "warn",
           "fix": "safe",
-          "options": {}
+          "options": {
+            "attributes": ["class", "className"],
+            "functions": ["cn", "cx", "clsx"]
+          }
         }
       }
     }
   },
-  "formatter": {
-    "indentStyle": "space"
+  "javascript": {
+    "formatter": {
+    "indentStyle": "space",
+      "quoteStyle": "single"
+    }
   },
   "overrides": [
     {
-      "include": ["./tsconfig.app.json", "./tsconfig.node.json"],
       "json": {
         "parser": {
           "allowComments": true
