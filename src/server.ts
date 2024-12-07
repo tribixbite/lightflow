@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 import { staticPlugin } from '@elysiajs/static';
-import { createPrediction, getPrediction, listPredictions } from '@/lib/replicate';
+import { createPrediction, listPredictions } from '@/lib/replicate';
 
 
 const app = new Elysia();
@@ -20,8 +20,8 @@ function sanitizePrompt(prompt: string): string {
 
 app.get('/remix', async ({ query }) => {
   // If predictionId is provided, get the prediction status/result
-  if (query.id) {
-    return await getPrediction(query.id);
+  if (query.list) {
+    return await listPredictions();
   }
 
   // If no image URL is provided when creating a new prediction
