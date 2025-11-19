@@ -1,45 +1,95 @@
-# vite-biome-tailwind-template
+# RepoZen
 
-![Default webpage screenshot](https://github.com/not-first/vite-biome-tailwind-template/assets/111339712/d0bdd8b6-6b1c-483f-acd4-dc80e1ed8bf6)
+**GitHub Project Discovery & Organization Tool**
+
+Live at: [repozen.com](https://repozen.com)
+
 ---
 
-Simple expansion of Vite's React template to create TypeScript projects integrated with:
+## What is RepoZen?
 
-- [Biome](https://biomejs.dev/): A fast formatter and linter (replacing both ESLint and Prettier) written in rust.
-- [TailwindCSS](https://tailwindcss.com/): CSS utility that provides classes to apply inline styles to components
+RepoZen is a GitHub project discovery app and organizational tool designed to help developers find, track, and manage repositories that match their tech stack preferences.
 
-## Contents
+## Current Features
 
-The unchanged vite-generated files: `.gitignore`, `index.html`, `tsconfig.app.js`, `tsconfig.node.json`, `tsconfig.json`, `vite-config` files.
+### GitHub Stack Search Helper
+Build powerful GitHub search queries with an intuitive UI:
 
-A `package.json` (and `package-lock.json`) file with ESLint, Prettier and their dependencies removed. Biome and TailwindCSS are installed as devDependencies. Available scripts are:
+- **Ecosystem Toggle** - Switch between JavaScript/TypeScript and Python ecosystems
+- **Global Filters** - Filter by minimum stars, minimum commits, and recency (updated within last week/month/year)
+- **Tech Stack Selection** - Choose from 13 categories including:
+  - Runtime, Linter, Bundler, ORM, Backend, Frontend
+  - UI Library, Auth, Validation, State Management
+  - Testing, Deployment, Database
+- **Quick Search** - Fuzzy search across all stack options
+- **URL Builder** - Generates GitHub search URLs with your selections
+- **One-Click Actions** - Copy URL or open directly in GitHub
 
-- `dev`, `build`, `preview` as provided by Vite
-- `format`: formats the project using Biome's formatter
-- `lint`: lints the project using Biome's linter
+## Roadmap
 
-Tailwind config files, including the default `tailwind.config.js` and `postcss.config.js`.
+- **GitHub OAuth Login** - Authenticate with your GitHub account
+- **Star Sync** - Import and organize your starred repositories
+- **Collections** - Create custom collections to organize projects
+- **NPM Health Check** - View package health metrics, download stats, and maintenance scores
+- **Dependency Analysis** - Analyze and compare project dependencies
+- **Stack Profiles** - Save your preferred tech stack configurations
+- **Repository Notes** - Add personal notes and tags to repositories
+- **Export/Import** - Export your collections and settings
 
-Biome config file `biome.json`. In addition to default config, it has git integration enabled, and has the experimental useSortedClasses (sorting of tailwind classes) rule enabled.
+## Architecture
 
-## Usage
+RepoZen is built as a monorepo scaffolding designed to host multiple apps. Each app can be as simple as a single TSX file.
 
-1. Clone to your machine. Do this by:
-    - Copying using [degit](https://github.com/Rich-Harris/degit) to download the files in the repo without the git history. (RECOMMENDED)
-      - `npx degit not-first/vite-biome-tailwind-template project-name`
+### Tech Stack
 
-    - Cloning this repo to your machine. This will keep the git history of this repo.
-       - `git clone https://github.com/not-first/vite-biome-tailwind-template.git`
+- **Build**: [Vite](https://vitejs.dev/) - Fast development and optimized builds
+- **Linting/Formatting**: [Biome](https://biomejs.dev/) - Rust-based formatter and linter (replaces ESLint + Prettier)
+- **Styling**: [TailwindCSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) - Utility-first CSS with pre-built components
+- **Language**: TypeScript + React
 
-    - Creating a repo using this template. Note that your repo will signify that it was built from this template.
-      - Click [here](https://github.com/not-first/vite-biome-tailwind-template/generate), or the 'Use this template' green button in the top right.
-  
-2. Install dependencies though `npm install`.
-3. Alter for your needs. Remember to:
-   - Update the `LICENSE` to the correct license and name
-   - Change the `name` and `author` properties in `package.json`
-   - Clean up the `README.md`
-4. You are good to go. Start the project with `npm run dev` and you will see an altered Vite starting screen with Vite, React, Biome and Tailwind styled using Tailwind classes.
+### Project Structure
+
+```
+src/
+├── components/     # React components (each can be a standalone app)
+│   ├── ui/         # shadcn/ui components
+│   └── GithubParam.tsx  # Main Stack Search Helper
+├── lib/            # Utilities
+└── main.tsx        # Entry point
+```
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Production build
+- `npm run preview` - Preview production build
+- `npm run format` - Format code with Biome
+- `npm run lint` - Lint code with Biome
+
+### Configuration
+
+- `biome.json` - Biome config with git integration and Tailwind class sorting
+- `tailwind.config.js` - Tailwind configuration
+- `tsconfig.json` - TypeScript configuration
+- `vite.config.ts` - Vite configuration
+
+## Development
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/tribixbite/lightflow.git
+   cd lightflow
+   ```
+
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+
+3. Start development server:
+   ```sh
+   npm run dev
+   ```
 
 ## Docker Instructions
 
