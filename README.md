@@ -98,7 +98,7 @@ src/
 To build the Docker image, run the following command in the root directory of the project:
 
 ```sh
-docker build -t my-app .
+docker build -t repozen .
 ```
 
 ### Running the Docker Container
@@ -106,7 +106,7 @@ docker build -t my-app .
 To run the Docker container, use the following command:
 
 ```sh
-docker run -p 3000:3000 my-app
+docker run -p 3000:3000 repozen
 ```
 
 ### Using Docker Compose
