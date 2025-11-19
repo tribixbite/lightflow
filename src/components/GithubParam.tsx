@@ -17,7 +17,6 @@ import {
   Copy,
   Database,
   ExternalLink,
-  GitCommit,
   Key,
   Layout,
   Package,
@@ -300,9 +299,9 @@ export const GithubParam = () => {
   const [isQuickSearchOpen, setIsQuickSearchOpen] = useState(false);
   const [globalFilters, setGlobalFilters] = useState({
     stars: "",
-    commits: "",
     updatedWithin: "",
   });
+  const [copied, setCopied] = useState(false);
 
   const stackOptions = isPython ? pythonStackOptions : jsStackOptions;
   const getThemeClasses = () => ({
@@ -349,28 +348,6 @@ export const GithubParam = () => {
   const quickSearchRef = useRef(null);
 
   useEffect(() => {
-    if (quickSearch) {
-      const normalizedSearch = quickSearch.toLowerCase().replace(/[\s.]+/g, "");
-      const results = Object.entries(stackOptions).flatMap(
-        ([category, options]) =>
-          options
-            .filter((option) =>
-              option
-                .toLowerCase()
-                .replace(/[\s.]+/g, "")
-                .includes(normalizedSearch)
-            )
-            .map((option) => ({ category, option }))
-      );
-      setQuickSearchResults(results);
-      setIsQuickSearchOpen(true);
-    } else {
-      setQuickSearchResults([]);
-      setIsQuickSearchOpen(false);
-    }
-  }, [quickSearch, stackOptions]);
-
-  useEffect(() => {
     // Reset selected stack when switching ecosystems
     setSelectedStack({});
   }, [isPython]);
@@ -385,12 +362,9 @@ export const GithubParam = () => {
     if (globalFilters.stars) {
       queryString += `stars:>=${globalFilters.stars} `;
     }
-    if (globalFilters.commits) {
-      //   queryString += `commits:>=${globalFilters.commits} `;
-    }
     if (globalFilters.updatedWithin) {
       const date = new Date();
-      date.setDate(date.getDate() - parseInt(globalFilters.updatedWithin));
+      date.setDate(date.getDate() - parseInt(globalFilters.updatedWithin, 10));
       const formattedDate = date.toISOString().split("T")[0];
       queryString += `pushed:>=${formattedDate} `;
     }
@@ -441,7 +415,7 @@ export const GithubParam = () => {
   };
 
   const theme = getThemeClasses();
-  const handleQuickSearchKeyDown = (event: { key: string }) => {
+  const handleQuickSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && quickSearchResults.length > 0) {
       handleQuickSearchSelect(quickSearchResults[0]);
     }
@@ -477,7 +451,7 @@ export const GithubParam = () => {
       </CardHeader>
       <CardContent className="space-y-6 pt-6">
         {/* Global Filters */}
-        <div className="grid grid-cols-4 gap-4 p-4 rounded-md border bg-black/20">
+        <div className="grid grid-cols-2 gap-4 p-4 rounded-md border bg-black/20">
           <div className="space-y-2">
             <label
               className={`text-sm font-medium ${theme.label} flex items-center gap-2`}
@@ -496,26 +470,6 @@ export const GithubParam = () => {
             />
           </div>
           <div className="space-y-2">
-            <label
-              className={`text-sm font-medium ${theme.label} flex items-center gap-2`}
-            >
-              <GitCommit className="w-4 h-4" /> Min Commits
-            </label>
-            <Input
-              type="number"
-              min="0"
-              placeholder="e.g. 50"
-              value={globalFilters.commits}
-              onChange={(e) =>
-                setGlobalFilters((prev) => ({
-                  ...prev,
-                  commits: e.target.value,
-                }))
-              }
-              className={theme.input}
-            />
-          </div>
-          <div className="space-y-2 col-span-2">
             <label
               className={`text-sm font-medium ${theme.label} flex items-center gap-2`}
             >
@@ -652,17 +606,28 @@ export const GithubParam = () => {
                 variant="ghost"
                 size="sm"
                 className={theme.button}
-                onClick={() => {
-                  navigator.clipboard.writeText(searchUrl);
-                  // Could add toast notification here
+                aria-label={copied ? "Copied!" : "Copy to clipboard"}
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(searchUrl);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  } catch (error) {
+                    console.error("Failed to copy:", error);
+                  }
                 }}
               >
-                <Copy className="w-4 h-4" />
+                {copied ? (
+                  <span className="text-xs">Copied!</span>
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 className={theme.button}
+                aria-label="Open in GitHub"
                 onClick={() => window.open(searchUrl, "_blank")}
               >
                 <ExternalLink className="w-4 h-4" />
